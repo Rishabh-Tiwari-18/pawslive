@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
 export default function ServiceCard({ s }) {
+  const Icon = s.icon; // get the icon component
+
   return (
     <Link to={`/services/${s.id}`} className="block group h-full">
       <div
@@ -21,9 +23,9 @@ export default function ServiceCard({ s }) {
           cursor-pointer
         "
       >
-        {/* ICON / IMAGE */}
-        <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#B3E0FF] to-[#80CCFF] flex items-center justify-center text-4xl mb-5 shadow-sm group-hover:shadow-md transition-all duration-300">
-          {s.icon || "🐾"}
+        {/* ICON */}
+        <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#D7ECFF] to-[#B9DFFF] flex items-center justify-center text-4xl mb-5 shadow-sm group-hover:shadow-md transition-all duration-300">
+          {Icon ? <Icon /> : "🐾"}
         </div>
 
         {/* TITLE */}
@@ -40,5 +42,5 @@ export default function ServiceCard({ s }) {
         </div>
       </div>
     </Link>
-  )
+  );
 }

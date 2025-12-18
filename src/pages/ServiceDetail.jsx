@@ -1,130 +1,292 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import services from "../data/services";
-import Hero from "../componets/Hero";
-import { Box, Typography, Button, Grid, Paper } from "@mui/material";
+import servicesDetail from "../data/servicesDetail";
+import Hero from "../componets/Hero"; // Make sure folder name is correct
+import {
+  Box,
+  Typography,
+  Button,
+  Paper,
+  Container,
+  Grid,
+  Chip,
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  useTheme,
+  alpha,
+} from "@mui/material";
+import {
+  ArrowBack,
+  CheckCircle,
+  Stars,
+  AttachMoney,
+  ErrorOutline,
+} from "@mui/icons-material";
 
 export default function ServiceDetail() {
   const { id } = useParams();
-  const svc = services.find((s) => s.id === id);
   const nav = useNavigate();
+  const theme = useTheme();
+
+  const svc = servicesDetail.find((s) => s.id === id);
+
+  const mainColor = svc?.colors?.primary || theme.palette.primary.main;
+  const lightBg = alpha(mainColor, 0.08);
+  const heavyBg = alpha(mainColor, 0.15);
 
   if (!svc) {
     return (
       <Box
-        minHeight="70vh"
         display="flex"
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
-        maxWidth="md"
-        mx="auto"
-        px={2}
-        py={6}
+        minHeight="60vh"
+        p={3}
         textAlign="center"
       >
-        <Typography variant="h4" color="error" gutterBottom>
+        <ErrorOutline sx={{ fontSize: 80, color: "text.disabled", mb: 2 }} />
+        <Typography variant="h4" fontWeight="bold" gutterBottom>
           Service Not Found
+        </Typography>
+        <Typography variant="body1" color="text.secondary" mb={4}>
+          The service you are looking for doesn't exist or has been removed.
         </Typography>
         <Button
           variant="outlined"
+          startIcon={<ArrowBack />}
           onClick={() => nav("/services")}
-          sx={{
-            mt: 2,
-            borderColor: "#007ACC",
-            color: "#007ACC",
-            "&:hover": {
-              backgroundColor: "#007ACC",
-              color: "white",
-            },
-          }}
+          sx={{ borderRadius: 20, textTransform: "none" }}
         >
-          Back to Services
+          Return to Services
         </Button>
       </Box>
     );
   }
 
+  const hasPricing = svc.pricing && svc.pricing.length > 0;
+  const hasFeatures = svc.features && svc.features.length > 0;
+
   return (
-    <>
+    <Box sx={{ bgcolor: "#F9FAFB", minHeight: "100vh", pb: 8 }}>
+      {/* Hero Section */}
       <Hero
         title={svc.title}
         subtitle={svc.short}
-        ctaText="Book Now"
-        onCta={() => {}}
-        bgColor={svc.colors?.light || "#E0F5FF"}
-        titleColor={svc.colors?.primary || "#007ACC"}
+        // Removed ctaText and onCta props to remove button
+        bgColor={svc.colors?.light || "#EEF2FF"}
+        titleColor={mainColor}
       />
 
-      <Box maxWidth="md" mx="auto" px={2} py={6}>
+      <Container maxWidth="lg" sx={{ mt: -6, position: "relative", zIndex: 2 }}>
         <Paper
-          elevation={3}
+          elevation={0}
           sx={{
-            p: 4,
-            borderRadius: 3,
-            borderLeft: `8px solid ${svc.colors?.primary || "#007ACC"}`,
+            p: { xs: 3, md: 5 },
+            borderRadius: 4,
+            boxShadow: "0px 10px 40px rgba(0,0,0,0.06)",
           }}
         >
-          {/* Title */}
-          <Typography
-            variant="h3"
-            fontWeight="bold"
-            mb={3}
-            sx={{ color: svc.colors?.primary || "#007ACC" }}
-          >
-            {svc.title}
-          </Typography>
+          {/* Header */}
+          <Box mb={4}>
+            <Button
+              startIcon={<ArrowBack />}
+              onClick={() => nav("/services")}
+              sx={{
+                mb: 2,
+                color: "text.secondary",
+                textTransform: "none",
+                "&:hover": { bgcolor: "transparent", color: mainColor },
+              }}
+            >
+              Back
+            </Button>
 
-          {/* Details */}
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            mb={6}
-            sx={{ lineHeight: 1.6 }}
-          >
-            {svc.details}
-          </Typography>
+            <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
+              <Typography
+                variant="h3"
+                component="h1"
+                fontWeight="800"
+                sx={{
+                  color: "#111827",
+                  fontSize: { xs: "2rem", md: "2.5rem" },
+                }}
+              >
+                {svc.title}
+              </Typography>
+              {hasPricing && (
+                <Chip
+                  label="Packages Available"
+                  icon={<Stars sx={{ fontSize: "16px !important" }} />}
+                  sx={{
+                    bgcolor: lightBg,
+                    color: mainColor,
+                    fontWeight: "bold",
+                    border: `1px solid ${alpha(mainColor, 0.2)}`,
+                  }}
+                />
+              )}
+            </Box>
+          </Box>
 
-          {/* 3 Cards */}
-          <Grid container spacing={4}>
-            {[
-              { title: "What to Expect", text: "Personalized, caring service that meets all your dog’s needs." },
-              { title: "Pricing & Packages", text: "Transparent pricing options tailored for your convenience." },
-              { title: "FAQ", text: "Answers to common questions so you can book with confidence." },
-            ].map((card, i) => (
-              <Grid item xs={12} md={4} key={i}>
+          <Grid container spacing={6}>
+            {/* LEFT COLUMN */}
+            <Grid item xs={12} md={hasPricing ? 7 : 12}>
+              <Typography
+                variant="h6"
+                fontWeight="700"
+                gutterBottom
+                sx={{ color: "#374151" }}
+              >
+                About this Service
+              </Typography>
+
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "text.secondary",
+                  lineHeight: 1.8,
+                  fontSize: "1.05rem",
+                  mb: 4,
+                }}
+              >
+                {svc.description || svc.details || "No description available."}
+              </Typography>
+
+              {hasFeatures && (
+                <Box mb={4}>
+                  <Typography variant="h6" fontWeight="700" gutterBottom>
+                    What We Offers
+                  </Typography>
+                  <List disablePadding>
+                    {svc.features.map((feature, index) => (
+                      <ListItem key={index} disableGutters sx={{ py: 0.5 }}>
+                        <ListItemIcon sx={{ minWidth: 36 }}>
+                          <CheckCircle sx={{ color: mainColor, fontSize: 20 }} />
+                        </ListItemIcon>
+                        <ListItemText primary={feature} />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Box>
+              )}
+
+              <Box
+                sx={{
+                  p: 3,
+                  bgcolor: lightBg,
+                  borderRadius: 3,
+                  borderLeft: `6px solid ${mainColor}`,
+                }}
+              >
+                <Typography
+                  variant="subtitle2"
+                  fontWeight="bold"
+                  sx={{ color: mainColor }}
+                >
+                  Important Note
+                </Typography>
+                <Typography variant="body2" color="text.secondary" mt={0.5}>
+                  Prices may vary depending on breed, size, temperament, and
+                  specific care requirements. We prioritize safety and hygiene
+                  in every session.
+                </Typography>
+              </Box>
+            </Grid>
+
+            {/* RIGHT COLUMN: Pricing */}
+            {hasPricing && (
+              <Grid item xs={12} md={5}>
                 <Paper
-                  elevation={1}
+                  variant="outlined"
                   sx={{
                     p: 3,
-                    borderRadius: 2,
-                    bgcolor: svc.colors?.light || "#E0F5FF",
-                    cursor: "pointer",
-                    transition: "0.3s",
-                    "&:hover": {
-                      boxShadow: 6,
-                      transform: "translateY(-4px)",
-                    },
+                    borderRadius: 3,
+                    position: { md: "sticky" },
+                    top: 20,
+                    borderColor: alpha(mainColor, 0.3),
                   }}
                 >
-                  <Typography
-                    variant="h6"
-                    fontWeight="600"
-                    mb={1}
-                    sx={{ color: svc.colors?.dark || "#005A99" }}
-                  >
-                    {card.title}
-                  </Typography>
+                  <Box display="flex" alignItems="center" mb={2}>
+                    <AttachMoney sx={{ color: mainColor, mr: 1 }} />
+                    <Typography variant="h5" fontWeight="700">
+                      Pricing Plans
+                    </Typography>
+                  </Box>
 
-                  <Typography variant="body2" color="text.secondary">
-                    {card.text}
+                  <Divider sx={{ mb: 3 }} />
+
+                  <Box display="flex" flexDirection="column" gap={3}>
+                    {svc.pricing.map((plan, index) => (
+                      <Box
+                        key={index}
+                        sx={{
+                          p: 3,
+                          borderRadius: 2,
+                          border: "1px solid",
+                          borderColor: plan.recommended
+                            ? mainColor
+                            : "divider",
+                          bgcolor: plan.recommended
+                            ? alpha(mainColor, 0.04)
+                            : "transparent",
+                          transition: "0.3s",
+                          "&:hover": {
+                            borderColor: mainColor,
+                            boxShadow: `0 4px 16px ${alpha(mainColor, 0.15)}`,
+                          },
+                        }}
+                      >
+                        <Box
+                          display="flex"
+                          justifyContent="space-between"
+                          alignItems="flex-start"
+                        >
+                          <Box>
+                            <Typography variant="subtitle1" fontWeight="bold">
+                              {plan.title}
+                            </Typography>
+                            {plan.frequency && (
+                              <Typography
+                                variant="caption"
+                                display="block"
+                                color="text.secondary"
+                              >
+                                {plan.frequency}
+                              </Typography>
+                            )}
+                          </Box>
+                          <Typography
+                            variant="h6"
+                            fontWeight="800"
+                            color={mainColor}
+                          >
+                            {plan.price}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+
+                  {/* Removed Book Appointment button */}
+
+                  <Typography
+                    variant="caption"
+                    display="block"
+                    align="center"
+                    color="text.disabled"
+                    mt={3}
+                  >
                   </Typography>
                 </Paper>
               </Grid>
-            ))}
+            )}
           </Grid>
         </Paper>
-      </Box>
-    </>
+      </Container>
+    </Box>
   );
 }

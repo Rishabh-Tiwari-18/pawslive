@@ -3,11 +3,12 @@
 import { useState } from "react";
 import services from "../data/services";
 import ServiceCard from "../componets/ServiceCard";
+import onOpenBook from '../pages/Contact';
 
-export default function Home() {
+export default function Home({onOpenBook}) {
   // For the CTA button on Hero sections, let's create a dummy handler
   // You can replace this with real modal open or navigation logic
-  const onOpenBook = () => alert("Booking Appointment clicked!");
+  
 
   return (
     <main className="font-sans bg-gradient-to-b from-[#E0F5FF] to-white min-h-screen">
