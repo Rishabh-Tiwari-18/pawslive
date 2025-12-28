@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
 import servicesList from "../data/services";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080"
 
 /* Generate 12-hour time slots */
 const generateTimeSlots = () => {
@@ -67,7 +68,7 @@ export default function BookModal({ open, onClose }) {
     setStatus({ type: "loading", message: "Booking appointment..." });
 
     try {
-      const res = await fetch("https://pawslive-backend.vercel.app/api/book-appointment", {
+      const res = await fetch(`${API_URL}/api/book-appointment`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

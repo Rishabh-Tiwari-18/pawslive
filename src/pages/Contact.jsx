@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
 import Hero from "../componets/Hero";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 export default function Contact({ onOpenBook }) {
   const [form, setForm] = useState({
@@ -22,7 +23,7 @@ export default function Contact({ onOpenBook }) {
     setLoading(true);
 
     try {
-      const res = await fetch("https://pawslive-backend.vercel.app/api/contact", {
+      const res = await fetch(`${API_URL}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
