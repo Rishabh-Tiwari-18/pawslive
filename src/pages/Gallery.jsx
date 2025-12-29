@@ -121,11 +121,21 @@ export default function GalleryPage() {
               />
             ) : (
               <video
-                src={media[activeIndex].url}
-                controls
-                autoPlay
-                className="max-h-[80vh] mx-auto rounded-xl"
-              />
+  src={media[activeIndex].url}
+  autoPlay
+  muted
+  playsInline
+  controls={false}
+  className="max-h-[80vh] mx-auto rounded-xl"
+  onLoadedMetadata={(e) => {
+    e.currentTarget.volume = 0;
+    e.currentTarget.muted = true;
+  }}
+  onPlay={(e) => {
+    e.currentTarget.volume = 0;
+    e.currentTarget.muted = true;
+  }}
+/>
             )}
           </div>
         </div>
