@@ -82,6 +82,17 @@ export default function Navbar() {
               >
                 Contact
               </NavLink>
+
+              <NavLink
+                to="/gallery"
+                className={({ isActive }) =>
+                  `text-sm font-medium transition-colors duration-200 ${
+                    isActive ? "text-[#007ACC] font-semibold" : "text-gray-700 hover:text-[#007ACC]"
+                  }`
+                }
+              >
+                Gallery
+              </NavLink>
             </div>
 
             {/* Mobile Menu Button */}
@@ -127,6 +138,7 @@ export default function Navbar() {
           <NavItemMobile to="/about" label="About Us" closeMenu={closeMenu} />
           <NavItemMobile to="/services" label="Services" closeMenu={closeMenu} />
           <NavItemMobile to="/contact" label="Contact" closeMenu={closeMenu} />
+          <NavItemMobile to="/gallery" label="Gallery" closeMenu={closeMenu} />
 
         </div>
       </div>

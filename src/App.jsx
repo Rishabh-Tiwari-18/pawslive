@@ -11,6 +11,7 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Hero from "./componets/Hero";
 import ServiceCard from "./componets/ServiceCard";
+import Gallery from './pages/Gallery'
 // import ResetOnRefresh from "./componets/RefreshOnRefresh";
 
 function App() {
@@ -64,6 +65,7 @@ function App() {
               element={<Contact onOpenBook={() => setIsBookOpen(true)} />}
             />
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route path="/gallery" element={<Gallery />} />
           </Routes>
         </main>
 
